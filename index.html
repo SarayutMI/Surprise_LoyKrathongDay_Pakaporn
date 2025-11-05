@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loy Krathong Surprise 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        /* Page 1: Password */
+        #page1 {
+            background: linear-gradient(135deg, #e392ec 0%, #652d9c 100%);
+            flex-direction: column;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-box h1 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .login-box p {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #d779dc 0%, #ce22b4 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Page 2: Announcement */
+        #page2 {
+            background: linear-gradient(to bottom, #1a1a2e 0%, #0f3460 100%);
+            flex-direction: column;
+        }
+
+        .announcement {
+            text-align: center;
+            color: white;
+        }
+
+        .announcement h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700; }
+            50% { text-shadow: 0 0 30px #ffd700, 0 0 50px #ffd700; }
+        }
+
+        .lanterns {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .lantern {
+            position: absolute;
+            width: 30px;
+            height: 40px;
+            background: radial-gradient(circle, #ffd700, #ff6b6b);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 8s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        /* Page 3: Decoration Selection */
+        #page3 {
+            background: linear-gradient(to bottom, #16213e 0%, #0f3460 100%);
+            flex-direction: column;
+            padding-top: 80px;
+        }
+
+        .decoration-container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .decoration-container h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .decoration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+
+        .decoration-item {
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+
+        .decoration-item:hover {
+            transform: scale(1.1);
+        }
+
+        .decoration-item.selected {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.3);
+        }
+
+        .decoration-item .emoji {
+            font-size: 2.5em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .decoration-item .name {
+            font-size: 0.8em;
+            color: #333;
+        }
+
+        .next-btn-container {
+            text-align: center;
+        }
+
+        /* Page 4: Floating Krathong */
+        #page4 {
+            background: linear-gradient(to bottom, #0a1128 0%, #001f54 50%, #034078 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .river {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(0,100,150,0.8), rgba(0,50,100,0.9));
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,60 Q300,0 600,60 T1200,60 L1200,120 L0,120 Z" fill="rgba(100,180,220,0.3)"/></svg>');
+            animation: wave 15s linear infinite;
+        }
+
+        .wave:nth-child(2) {
+            animation-duration: 20s;
+            opacity: 0.5;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .krathong {
+            position: absolute;
+            bottom: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            animation: floatKrathong 4s ease-in-out infinite;
+        }
+
+        @keyframes floatKrathong {
+            0%, 100% { transform: translateX(-50%) translateY(0) rotate(-2deg); }
+            50% { transform: translateX(-50%) translateY(-15px) rotate(2deg); }
+        }
+
+        .krathong-base {
+            width: 150px;
+            height: 60px;
+            background: radial-gradient(circle, #8B4513, #654321);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .decorations-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            max-width: 120px;
+            gap: 2px;
+            padding: 5px;
+        }
+
+        .decorations-display span {
+            font-size: 1.2em;
+        }
+
+        .candle {
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 30px;
+            background: #fff;
+            border-radius: 4px;
+        }
+
+        .flame {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 20px;
+            background: radial-gradient(circle, #ffd700, #ff6b00);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: flicker 0.5s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+
+        .fish, .duck {
+            position: absolute;
+            animation: swim 10s linear infinite;
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .fish {
+            font-size: 2em;
+            bottom: 20%;
+        }
+
+        .duck {
+            font-size: 2.5em;
+            bottom: 45%;
+        }
+
+        @keyframes swim {
+            0% { left: -100px; }
+            100% { left: 110%; }
+        }
+
+        .sinking {
+            animation: sink 1s ease-in forwards !important;
+        }
+
+        @keyframes sink {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(200px) scale(0.3); opacity: 0; }
+        }
+
+        .moon {
+            position: absolute;
+            top: 10%;
+            right: 15%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #ffd700, #ffed4e);
+            border-radius: 50%;
+            box-shadow: 0 0 50px #ffd700;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 60%;
+            top: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .next-page-btn {
+            position: absolute;
+            bottom: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+        }
+
+        /* Page 5: Love Message */
+        #page5 {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            flex-direction: column;
+            position: relative;
+        }
+
+        .love-message {
+            background: rgba(255,255,255,0.95);
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .love-message h1 {
+            color: #c06c84;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .love-message p {
+            color: #666;
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            animation: floatHeart 6s infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Page 6: ปล่อยโคมลอย */
+        #page6 {
+            background: radial-gradient(circle at bottom, #001f3f 0%, #000814 80%);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .koom {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, #ffb347, #ff6b6b);
+            border-radius: 40% 40% 50% 50% / 50% 50% 60% 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 10%;
+            opacity: 0;
+            transition: all 1s ease;
+        }
+
+        .koom .flame {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 25px;
+            background: radial-gradient(circle, #ffdf00, #ff8c00);
+            border-radius: 50%;
+            opacity: 0;
+            animation: flickerFlame 0.3s infinite;
+        }
+
+        @keyframes flickerFlame {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 0.8; }
+        }
+
+        .fly {
+            animation: flyUp 4s forwards ease-in;
+        }
+
+        @keyframes flyUp {
+            0% { bottom: 10%; opacity: 1; transform: translateX(-50%) scale(1); }
+            100% { bottom: 110%; opacity: 0; transform: translateX(-50%) scale(0.8); }
+        }
+
+        .burn {
+            animation: burnDown 2s forwards ease-in;
+        }
+
+        @keyframes burnDown {
+            0% { transform: translateX(-50%) scale(1); opacity: 1; filter: brightness(1); }
+            50% { filter: brightness(2); }
+            100% { bottom: 0; transform: translateX(-50%) scale(0.3) rotate(60deg); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Page 1: Password -->
+    <div id="page1" class="page active">
+        <div class="login-box">
+            <h1>Hello Pakaporn, Tawan</h1>
+            <p>💕 กรุณาใส่รหัสพิเศษ 💕</p>
+            <input type="password" id="password" placeholder="ใส่รหัสที่นี่">
+            <button class="btn" onclick="checkPassword()">พร้อมแล้ว!!!</button>
+            <p class="error" id="error">รหัสไม่ถูกต้อง ลองใหม่นะคั้บบบ 🥺</p>
+        </div>
+    </div>
+
+    <!-- Page 2: Announcement -->
+    <div id="page2" class="page">
+        <div class="lanterns" id="lanterns"></div>
+        <div class="announcement">
+            <h1>🏮 5 November is<br>Loy Krathong Festival 🏮</h1>
+            <br><br>
+            <button class="btn" onclick="goToPage(3)">Let's Go!!!!</button>
+        </div>
+    </div>
+
+    <!-- Page 3: Decoration Selection -->
+    <div id="page3" class="page">
+        <div class="decoration-container">
+            <h2>🌸 เลือกของตกแต่งกระทงกันเถอะ 🌸</h2>
+            <div class="decoration-grid" id="decorationGrid"></div>
+            <div class="next-btn-container">
+                <button class="btn" onclick="goToPage(4)">Go Go Kub bb 💕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Floating Krathong -->
+    <div id="page4" class="page">
+        <div class="moon"></div>
+        <div class="stars" id="stars"></div>
+        
+        <div class="krathong">
+            <div class="decorations-display" id="krathongDecorations"></div>
+            <div class="candle">
+                <div class="flame"></div>
+            </div>
+            <div class="krathong-base"></div>
+        </div>
+
+        <div class="river">
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+
+        <div class="fish" style="animation-delay: 0s; bottom: 15%;" onclick="sinkObject(this)">🐟</div>
+        <div class="fish" style="animation-delay: 3s; bottom: 25%;" onclick="sinkObject(this)">🐠</div>
+        <div class="fish" style="animation-delay: 6s; bottom: 18%;" onclick="sinkObject(this)">🐡</div>
+        <div class="duck" style="animation-delay: 2s;" onclick="sinkObject(this)">🦆</div>
+        <div class="duck" style="animation-delay: 7s;" onclick="sinkObject(this)">🦆</div>
+
+        <button class="btn next-page-btn" onclick="goToPage(5)">ต่อไป ✨</button>
+    </div>
+
+    <!-- Page 5: Love Message -->
+    <div id="page5" class="page">
+        <div class="hearts" id="hearts"></div>
+        <div class="love-message">
+            <h1>💕 To BB 💕</h1>
+            <p>แม้ว่าเราจะไม่ได้อยู่ด้วยกัน<br>
+            แต่เค้าก็ยังรักหนูเหมือนเดิม<br><br>
+            ขอโทษที่ไม่ได้อยู่ใน Moment สำคัญ<br>
+            และขอให้หนูอยู่กันเค้าไปนานๆนะค้าบบ🌙✨</p>
+            <button class="btn" onclick="makeWish()">Make a Wish Together 🙏</button>
+        </div>
+    </div>
+
+        <!-- Page 6: ปล่อยโคมลอย -->
+    <div id="page6" class="page">
+        <div class="sky" id="sky">
+            <p style="position:absolute;top:20px;width:100%;text-align:center;color:white;font-size:1.2em;">
+                🌕 แตะค้างที่จออย่างน้อย 10 วินาทีเพื่อจุดไฟ และ 20 วินาทีเพื่อปล่อยขึ้นฟ้า 🌕<br>
+                (ถ้านานเกิน 30 วินาที... โคมจะไหม้นะ 😅)
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Decorations data
+        const decorations = [
+            {emoji: '🌸', name: 'ดอกบัว'},
+            {emoji: '🌺', name: 'ดอกไม้'},
+            {emoji: '🌹', name: 'กุหลาบ'},
+            {emoji: '🌷', name: 'ทิวลิป'},
+            {emoji: '🌼', name: 'เดซี่'},
+            {emoji: '🌻', name: 'ทานตะวัน'},
+            {emoji: '🏵️', name: 'ดอกไม้'},
+            {emoji: '💐', name: 'ช่อดอกไม้'},
+            {emoji: '🍃', name: 'ใบไม้'},
+            {emoji: '🍀', name: 'โคลเวอร์'},
+            {emoji: '🎋', name: 'ไผ่'},
+            {emoji: '🌿', name: 'สมุนไพร'},
+            {emoji: '🕯️', name: 'เทียน'},
+            {emoji: '💎', name: 'เพชร'},
+            {emoji: '💍', name: 'แหวน'},
+            {emoji: '🪙', name: 'เหรียญ'},
+            {emoji: '🧧', name: 'ซอง'},
+            {emoji: '🎀', name: 'โบว์'},
+            {emoji: '🎗️', name: 'ริบบิ้น'},
+            {emoji: '⭐', name: 'ดาว'},
+            {emoji: '✨', name: 'ประกาย'},
+            {emoji: '💫', name: 'ดาวหาง'},
+            {emoji: '🌟', name: 'ดาวแวววาว'},
+            {emoji: '🦋', name: 'ผีเสื้อ'},
+            {emoji: '🐝', name: 'ผึ้ง'},
+            {emoji: '🌙', name: 'พระจันทร์'},
+            {emoji: '☀️', name: 'ดวงอาทิตย์'},
+            {emoji: '🎐', name: 'กระดิ่ง'},
+            {emoji: '🎏', name: 'ธง'},
+            {emoji: '🧿', name: 'เครื่องราง'}
+        ];
+
+        let selectedDecorations = [];
+
+        // Password check
+        function checkPassword() {
+            const password = document.getElementById('password').value;
+            if (password === '11062025') {
+                goToPage(2);
+            } else {
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        // Page navigation
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page' + pageNum).classList.add('active');
+
+            if (pageNum === 2) {
+                createLanterns();
+            } else if (pageNum === 3) {
+                createDecorationGrid();
+            } else if (pageNum === 4) {
+                displayKrathongDecorations();
+                createStars();
+            } else if (pageNum === 5) {
+                createHearts();
+            }
+        }
+
+        // Create floating lanterns
+        function createLanterns() {
+            const container = document.getElementById('lanterns');
+            container.innerHTML = '';
+            for (let i = 0; i < 10; i++) {
+                const lantern = document.createElement('div');
+                lantern.className = 'lantern';
+                lantern.style.left = Math.random() * 100 + '%';
+                lantern.style.top = Math.random() * 100 + '%';
+                lantern.style.animationDelay = Math.random() * 5 + 's';
+                lantern.style.animationDuration = (8 + Math.random() * 4) + 's';
+                container.appendChild(lantern);
+            }
+        }
+
+        // Create decoration grid
+        function createDecorationGrid() {
+            const grid = document.getElementById('decorationGrid');
+            grid.innerHTML = '';
+            decorations.forEach((dec, index) => {
+                const item = document.createElement('div');
+                item.className = 'decoration-item';
+                item.innerHTML = `<span class="emoji">${dec.emoji}</span><span class="name">${dec.name}</span>`;
+                item.onclick = () => toggleDecoration(index, item);
+                grid.appendChild(item);
+            });
+        }
+
+        // Toggle decoration selection
+        function toggleDecoration(index, element) {
+            const decIndex = selectedDecorations.indexOf(index);
+            if (decIndex > -1) {
+                selectedDecorations.splice(decIndex, 1);
+                element.classList.remove('selected');
+            } else {
+                selectedDecorations.push(index);
+                element.classList.add('selected');
+            }
+        }
+
+        // Display selected decorations on krathong
+        function displayKrathongDecorations() {
+            const container = document.getElementById('krathongDecorations');
+            container.innerHTML = '';
+            if (selectedDecorations.length === 0) {
+                // Default decorations if none selected
+                container.innerHTML = '🌸🌺🌸';
+            } else {
+                selectedDecorations.forEach(index => {
+                    const span = document.createElement('span');
+                    span.textContent = decorations[index].emoji;
+                    container.appendChild(span);
+                });
+            }
+        }
+
+        // Create stars
+        function createStars() {
+            const container = document.getElementById('stars');
+            container.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
+        }
+
+        // Create floating hearts
+        function createHearts() {
+            const container = document.getElementById('hearts');
+            container.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '💕';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.animationDuration = (6 + Math.random() * 3) + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        // Make a wish
+        //function makeWish() {
+        //    alert('✨ ขอให้ความปรารถนาของเราสมหวังทุกประการ 💕🙏 ขอบคุณที่อยู่เคียงข้างกันเสมอนะ 🌙');
+        //}
+
+        // Sink object when clicked
+        function sinkObject(element) {
+            element.classList.add('sinking');
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 1000);
+        }
+
+        // เปิดหน้าโคมลอยเมื่อกด Make a Wish
+        function makeWish() {
+            goToPage(6);
+            initLanternPage();
+        }
+
+       function initLanternPage() {
+        const sky = document.getElementById('sky');
+        sky.innerHTML = `
+            <p style="position:absolute;top:20px;width:100%;text-align:center;color:white;font-size:1.2em;">
+                🌕 แตะค้างที่จออย่างน้อย 10 วินาทีเพื่อจุดไฟ และ 20 วินาทีเพื่อปล่อยขึ้นฟ้า 🌕<br>
+                (ถ้านานเกิน 30 วินาที... โคมจะไหม้นะ 😅)
+            </p>
+        `;
+
+        let pressStart = 0;
+        let holding = false;
+        let koom = null;
+        let flame = null;
+        let animationFrame = null;
+
+        // รองรับทั้ง mouse, touch, และ click
+        sky.addEventListener('mousedown', startPress);
+        sky.addEventListener('mouseup', endPress);
+        sky.addEventListener('mouseleave', endPress); // ปล่อยถ้าออกจากจอ
+        sky.addEventListener('touchstart', startPress);
+        sky.addEventListener('touchend', endPress);
+        sky.addEventListener('click', singleClick); // fallback ถ้าแตะไม่ค้าง
+
+        function startPress(e) {
+            e.preventDefault();
+            if (holding) return;
+            holding = true;
+            pressStart = performance.now();
+
+            if (koom) koom.remove();
+
+            koom = document.createElement('div');
+            koom.className = 'koom';
+            flame = document.createElement('div');
+            flame.className = 'flame';
+            koom.appendChild(flame);
+            sky.appendChild(koom);
+
+            requestAnimationFrame(trackHold);
+        }
+
+        function trackHold(time) {
+            if (!holding) return;
+
+            const elapsed = (time - pressStart) / 1000;
+            koom.style.opacity = Math.min(elapsed / 2, 1);
+
+            if (elapsed >= 10 && elapsed < 20) {
+                flame.style.opacity = Math.min((elapsed - 10) / 3, 1);
+            }
+            if (elapsed >= 20 && elapsed < 30) {
+                koom.style.transition = 'bottom 4s ease-out';
+                koom.style.bottom = '120%';
+            }
+            if (elapsed >= 30) {
+                koom.style.transition = 'all 2s ease-in';
+                koom.style.transform = 'translateX(-50%) scale(0.3) rotate(60deg)';
+                koom.style.opacity = 0;
+                holding = false;
+                return;
+            }
+
+            animationFrame = requestAnimationFrame(trackHold);
+        }
+
+        function endPress() {
+            if (!holding) return;
+            holding = false;
+            cancelAnimationFrame(animationFrame);
+            const held = (performance.now() - pressStart) / 1000;
+
+            if (held >= 20 && held < 30) {
+                koom.style.transition = 'bottom 4s ease-in';
+                koom.style.bottom = '120%';
+            } else if (held < 10) {
+                koom.style.transition = 'opacity 1s';
+                koom.style.opacity = 0;
+                setTimeout(() => koom.remove(), 1000);
+            }
+        }
+
+        // fallback สำหรับคลิกสั้น (บาง Mac คิดว่าเป็น click ไม่ใช่ hold)
+        function singleClick() {
+            if (!koom) {
+                koom = document.createElement('div');
+                koom.className = 'koom';
+                flame = document.createElement('div');
+                flame.className = 'flame';
+                koom.appendChild(flame);
+                sky.appendChild(koom);
+                setTimeout(() => koom.style.opacity = 1, 200);
+                setTimeout(() => {
+                    koom.style.transition = 'bottom 3s ease-in';
+                    koom.style.bottom = '120%';
+                }, 800);
+            }
+        }
+        // ปุ่มจำลองกดค้าง 20 วินาที สำหรับทดสอบบน Mac
+ /*           const testBtn = document.createElement('button');
+            testBtn.textContent = "🕯️ ทดสอบปล่อยโคม (จำลองแตะค้าง)";
+            testBtn.style.position = 'absolute';
+            testBtn.style.bottom = '20px';
+            testBtn.style.left = '50%';
+            testBtn.style.transform = 'translateX(-50%)';
+            testBtn.style.padding = '10px 20px';
+            testBtn.style.fontSize = '1em';
+            testBtn.style.border = 'none';
+            testBtn.style.borderRadius = '10px';
+            testBtn.style.cursor = 'pointer';
+            sky.appendChild(testBtn);
+
+            testBtn.onclick = () => {
+                if (koom) koom.remove();
+                koom = document.createElement('div');
+                koom.className = 'koom';
+                flame = document.createElement('div');
+                flame.className = 'flame';
+                koom.appendChild(flame);
+                sky.appendChild(koom);
+                setTimeout(() => { flame.style.opacity = 1; }, 10000);
+                setTimeout(() => { koom.style.transition = 'bottom 4s ease-in'; koom.style.bottom = '120%'; }, 20000);
+            };
+            */
+
+    }
+
+
+
+        // Allow Enter key for password
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+</html>
